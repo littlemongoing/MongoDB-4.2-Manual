@@ -16,12 +16,12 @@ MongoDB中文社区是MongoDB官方支持的MongoDB爱好者交流平台。中�
 
 相关公众号：
 
-Mongoing中文社区
+Mongoing中文社区—— MongoDB实践一手干货，社区用户大会最新资讯；
 
-MongoDB数据库
+MongoDB数据库—— MongoDB官方微信；
 
-MongoDB中文用户组
-
+MongoDB中文用户组 —— MongoDB用户手册最新翻译发布。
+（本资料库内容的更新将会以全中文格式发布到MongoDB中文用户组上哦）
 
 <br/>
 <br/>
