@@ -10,7 +10,7 @@ MongoDB中文社区：mongoing.com
 相关公众号：
 
 Mongoing中文社区
-！（https://mongoing.com/wp-content/uploads/2017/07/qrcode.jpg）
+!(https://mongoing.com/wp-content/uploads/2017/07/qrcode.jpg)
 
 MongoDB数据库
 
