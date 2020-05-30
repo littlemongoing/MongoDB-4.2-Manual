@@ -8,7 +8,7 @@ MongoDB中文社区是MongoDB官方支持的MongoDB爱好者交流平台。中�
 
 申请加入请联系MongoDB中文社区助理 小芒果，微信：mongoingcom
 
------------------------------
+###  
 
 更多信息请访问：
 [MongoDB中文社区：mongoing.com](https://mongoing.com/)
@@ -22,7 +22,7 @@ MongoDB数据库
 MongoDB中文用户组
 
 
--------------------------------
+###  
 
 
 以下是关于MongoDB文档的一些说明。
