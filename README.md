@@ -28,20 +28,33 @@ MongoDB中文用户组 —— MongoDB用户手册最新翻译发布。
 
 以下是关于MongoDB文档的一些说明。
 
-The MongoDB Documentation Project is governed by the terms of the MongoDB Contributor Agreement.
 
-To contribute to the documentation, please fork this repository on GitHub and issue a pull request. If you have not done so already, please sign the MongoDB Contributor Agreement
+Contribute
+----------
 
-To file issues or requests regarding the documentation, go to the Documentation Jira Project.
+The MongoDB Documentation Project is governed by the terms of the
+`MongoDB Contributor Agreement
+<https://www.mongodb.com/legal/contributor-agreement>`_.
 
-For an overview of the documentation style, process, and overall organization, see the following pages:
+To contribute to the documentation, 
 
-Style Guide
-Documentation Practices
-Documentation Organization
-Build Instructions
-All documentation is available under the terms of a Creative Commons License.
+- If you have not done so already, please sign the `MongoDB Contributor Agreement <https://www.mongodb.com/legal/contributor-agreement>`_.
 
-If you have any questions, please contact docs@mongodb.com.
+- Fork this repository on GitHub and issue a pull request. 
+
+Report Issues
+-------------
+
+To file issues or requests regarding the documentation, go to the
+`Documentation Jira Project <https://jira.mongodb.org/browse/DOCS>`_.
+
+License
+-------
+
+All documentation is available under the terms of a `Creative Commons
+License <https://creativecommons.org/licenses/by-nc-sa/3.0/>`_.
+
+If you have any questions, please contact `docs@mongodb.com
+<mailto:docs@mongodb.com>`_.
 
 -- The MongoDB Documentation Team
