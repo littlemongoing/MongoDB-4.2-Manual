@@ -5,12 +5,11 @@
 MongoDB中文社区是MongoDB官方支持的MongoDB爱好者交流平台。中文社区由博客、线下活动、技术问答、官方文档翻译等版块组成，迄今为止已经举办了数十场线下活动和线上直播，发表了数百篇技术文章及文档，在社区里支持了数万计的 MongoDB 用户。
 
 更多信息请访问：
-MongoDB中文社区：mongoing.com
+[MongoDB中文社区：mongoing.com](https://mongoing.com/)
 
 相关公众号：
 
 Mongoing中文社区
-!(https://mongoing.com/wp-content/uploads/2017/07/qrcode.jpg)
 
 MongoDB数据库
 
