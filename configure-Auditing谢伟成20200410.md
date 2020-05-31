@@ -1,9 +1,9 @@
-# Configure Auditing[](#configure-auditing "Permalink to this headline")
+# [Configure Auditing](#configure-auditing "Permalink to this headline")
 # 配置审计
 
 On this page
 在本页
-*   [Enable and Configure Audit Output]启用和配置审计输出(#enable-and-configure-audit-output)
+*   [启用和配置审计输出](#enable-and-configure-audit-output)
 *   [启用和配置审计输出](#enable-and-configure-audit-output)
 
 Auditing in MongoDB Atlas:
@@ -48,7 +48,7 @@ mongod --dbpath data/db --auditDestination syslog
 ```
 Include additional options as required for your configuration. For instance, if you wish remote clients to connect to your deployment or your deployment members are run on different hosts, specify the `--bind_ip`. For more information, see [Localhost Binding Compatibility Changes](../../release-notes/3.6-compatibility/#bind-ip-compatibility).
 
-包括配置所需的其他选项。例如，如果您希望远程客户端连接到您的部署，或者您的部署成员在不同的主机上运行，​​请指定 --bind_ip。有关更多信息，请参见 [Localhost绑定兼容性更改](../../release-notes/3.6-compatibility/#bind-ip-compatibility)。
+包括配置所需的其他选项。例如，如果您希望远程客户端连接到您的部署，或者您的部署成员在不同的主机上运行，请指定 --bind_ip。有关更多信息，请参见 [Localhost绑定兼容性更改](../../release-notes/3.6-compatibility/#bind-ip-compatibility)。
 
 Important
 重要
@@ -83,7 +83,7 @@ To enable auditing and print the audit events to standard output (i.e. `stdout`)
 mongod --dbpath data/db --auditDestination console
 ```
 Include additional options as required for your configuration. For instance, if you wish remote clients to connect to your deployment or your deployment members are run on different hosts, specify the `--bind_ip`. For more information, see [Localhost Binding Compatibility Changes](../../release-notes/3.6-compatibility/#bind-ip-compatibility).
-包括配置所需的其他选项。例如，如果您希望远程客户端连接到您的部署，或者您的部署成员在不同的主机上运行，​​请指定 --bind_ip。有关更多信息，请参见 [Localhost绑定兼容性更改](../../release-notes/3.6-compatibility/#bind-ip-compatibility)。
+包括配置所需的其他选项。例如，如果您希望远程客户端连接到您的部署，或者您的部署成员在不同的主机上运行，请指定 --bind_ip。有关更多信息，请参见 [Localhost绑定兼容性更改](../../release-notes/3.6-compatibility/#bind-ip-compatibility)。
 
 Important
 重要
@@ -132,7 +132,7 @@ mongod --dbpath data/db --auditDestination file --auditFormat JSON --auditPath d
 ```
 
 Include additional options as required for your configuration. For instance, if you wish remote clients to connect to your deployment or your deployment members are run on different hosts, specify the `--bind_ip`. For more information, see [Localhost Binding Compatibility Changes](../../release-notes/3.6-compatibility/#bind-ip-compatibility).
-包括配置所需的其他选项。例如，如果您希望远程客户端连接到您的部署，或者您的部署成员在不同的主机上运行，​​请指定--bind_ip参数。有关更多信息，请参见[Localhost绑定兼容性更改](../../release-notes/3.6-compatibility/#bind-ip-compatibility)。
+包括配置所需的其他选项。例如，如果您希望远程客户端连接到您的部署，或者您的部署成员在不同的主机上运行，请指定--bind_ip参数。有关更多信息，请参见[Localhost绑定兼容性更改](../../release-notes/3.6-compatibility/#bind-ip-compatibility)。
 
 Important:
 重要：
