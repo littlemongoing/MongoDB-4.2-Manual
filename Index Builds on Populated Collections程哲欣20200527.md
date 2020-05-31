@@ -9,7 +9,7 @@ On this page
 -   [Build Failure and Recovery](#build-failure-and-recovery)  构建失败和恢复
 -   [Monitor In Progress Index Builds](#monitor-in-progress-index-builds)   监视正在进行的索引生成
 -   [Terminate In Progress Index Builds](#terminate-in-progress-index-builds)  终止正在进行的索引生成
--   [Index Build Process](#index-build-process)  索引构建过程
+-   [Index Build Process](#index-build-process)  索引生成过程
 
 Changed in version MongoDB: 4.2
 MongoDB 4.2版本新变化
@@ -25,7 +25,7 @@ The build process is summarized as follows:
     The  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  takes an exclusive lock against the collection being indexed. This blocks all read and write operations to the collection until the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  releases the lock. Applications cannot access the collection during this time.
     [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod") 进程对正在编制索引的集合使用独占锁。所有对该集合的读写操作将阻塞直到[`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod") 进程释放锁。在此期间，应用程序无法访问集合。
 
-2.  **Data Ingestion and Processing  数据摄取和加工**
+2.  **Data Ingestion and Processing  数据提取和加工**
     
     The  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  releases all locks taken by the index build process before taking a series of intent locks against the collection being indexed. Applications can issue read and write operations against the collection during this time.
     [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")进程释放上一过程中获取的所有锁，然后针对被索引的集合获取一系列意向锁。在此期间，应用程序可以对集合发出读写操作。
@@ -75,7 +75,7 @@ MongoDB 4.2版本构建索引时的性能表现与基于后台的索引构建方
 Use  [`db.currentOp()`](../reference/method/db.currentOp.html#db.currentOp "db.currentOp()")  to monitor the progress of ongoing index builds.
 使用[`db.currentOp()`](../reference/method/db.currentOp.html#db.currentOp "db.currentOp()") 命令监测索引生成进度。
 
-### Constraint Violations During Index Build[](#constraint-violations-during-index-build "Permalink to this headline")    索引构建期间的冲突约束
+### Constraint Violations During Index Build[](#constraint-violations-during-index-build "Permalink to this headline")    索引构建期间的约束冲突
 
 For indexes that enforce constraints on the collection, such as  [unique](index-unique.html)  indexes, the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  checks all pre-existing and concurrently-written documents for violations of those constraints  _after_  the index build completes. Documents that violate the index constraints can exist during the index build. If any documents violate the index constraints at the end of the build, the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  terminates the build and throws an error.
 对集合具有强制约束作用的索引，例如：[unique](index-unique.html) 特性索引，  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")进程会在索引构建完成后对所有预先存在的和并发写入的文档进行约束性检查。如果任何文档违反了索引约束条件，[`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")进程将终止构建并抛出错误。
@@ -164,12 +164,12 @@ Dropping the index on the primary before secondaries complete the replicated ind
 If the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  shuts down during the index build, the index build job and all progress is lost. Restarting the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  does not restart the index build. You must re-issue the  [`createIndex()`](../reference/method/db.collection.createIndex.html#db.collection.createIndex "db.collection.createIndex()")  operation to restart the index build.
 如果[`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")进程在索引构建时终止了，索引构建任务和所有进程将丢失。重启[`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")进程不会重新执行索引构建，你必须重新运行[`createIndex()`](../reference/method/db.collection.createIndex.html#db.collection.createIndex "db.collection.createIndex()") 操作来重启索引构建。
 
-### Interrupted Index Builds on a Primary  `mongod`[](#interrupted-index-builds-on-a-primary-mongod "Permalink to this headline")  Primary节点`mongod`[](#interrupted-index-builds-on-a-primary-mongod "Permalink to this headline")进程的索引构建中断
+### Interrupted Index Builds on a Primary  `mongod`[](#interrupted-index-builds-on-a-primary-mongod "Permalink to this headline")  Primary主节点`mongod`[](#interrupted-index-builds-on-a-primary-mongod "Permalink to this headline")进程的索引构建中断
 
 If the primary shuts down or steps down during the index build, the index build job and all progress is lost. Restarting the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  does not restart the index build. You must re-issue the  [`createIndex()`](../reference/method/db.collection.createIndex.html#db.collection.createIndex "db.collection.createIndex()")  operation to restart the index build.
 如果primary节点在索引构建时停止了，索引构建任务和所有进程将丢失。你必须重新运行[`createIndex()`](../reference/method/db.collection.createIndex.html#db.collection.createIndex "db.collection.createIndex()") 操作来重启索引构建。
 
-### Interrupted Index Builds on a Secondary  `mongod`[](#interrupted-index-builds-on-a-secondary-mongod "Permalink to this headline") Secondary节点`mongod`[](#interrupted-index-builds-on-a-secondary-mongod "Permalink to this headline")进程的索引构建中断
+### Interrupted Index Builds on a Secondary  `mongod`[](#interrupted-index-builds-on-a-secondary-mongod "Permalink to this headline") Secondary从节点`mongod`[](#interrupted-index-builds-on-a-secondary-mongod "Permalink to this headline")进程的索引构建中断
 
 If a secondary shuts down during the index build, the index build job is persisted. Restarting the  [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")  recovers the index build and restarts it  **from scratch**.
 如果secondary节点在索引构建时停止了，索引构建任务将保留。重启 [`mongod`](../reference/program/mongod.html#bin.mongod "bin.mongod")进程将恢复索引构建并从头重新开始。
