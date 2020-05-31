@@ -5,7 +5,7 @@
 On this page
 
 - [Oplog Size](https://docs.mongodb.com/manual/core/replica-set-oplog/#oplog-size) Oplog 大小
-- [Workloads that Might Require a Larger Oplog Size](https://docs.mongodb.com/manual/core/replica-set-oplog/#workloads-that-might-require-a-larger-oplog-size)可能需要更大Oplog大小的工作负载
+- [Workloads that Might Require a Larger Oplog Size](https://docs.mongodb.com/manual/core/replica-set-oplog/#workloads-that-might-require-a-larger-oplog-size)可能需要更大Oplog的工作负载
 - [Oplog Status](https://docs.mongodb.com/manual/core/replica-set-oplog/#oplog-status)Oplog状态
 - [Slow Oplog Application](https://docs.mongodb.com/manual/core/replica-set-oplog/#slow-oplog-application)慢Oplog应用程序
 - [Oplog Collection Behavior](https://docs.mongodb.com/manual/core/replica-set-oplog/#oplog-collection-behavior)Oplog集合的特性
