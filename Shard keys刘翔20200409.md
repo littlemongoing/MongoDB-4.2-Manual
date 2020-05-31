@@ -4,7 +4,7 @@
 
 > On this page 本页面中
 > - [Shard Key Specification 分片键格式](https://docs.mongodb.com/manual/core/sharding-shard-key/#shard-key-specification)
-> - [Change a Document’s Shard Key Value 改变一个文档的分片键](https://docs.mongodb.com/manual/core/sharding-shard-key/#change-a-document-s-shard-key-value)
+> - [Change a Document’s Shard Key Value 改变一个文档的分片键值](https://docs.mongodb.com/manual/core/sharding-shard-key/#change-a-document-s-shard-key-value)
 > - [Shard Key Indexes 分片键索引](https://docs.mongodb.com/manual/core/sharding-shard-key/#shard-key-indexes)
 > - [Choosing a Shard Key 选择一个shard key](https://docs.mongodb.com/manual/core/sharding-shard-key/#choosing-a-shard-key)
 
