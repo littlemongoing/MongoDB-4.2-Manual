@@ -193,7 +193,7 @@ To set read concern for operations in a transaction, you set the read concern at
 
 ### Read Your Own Writes
 
-### 读自己的写如
+### 读自己的写
 
 *Changed in version 3.6.*
 
