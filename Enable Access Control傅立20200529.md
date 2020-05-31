@@ -22,7 +22,7 @@ On this page
 
 Enabling access control on a MongoDB deployment enforces authentication, requiring users to identify themselves. When accessing a MongoDB deployment that has access control enabled, users can only perform actions as determined by their roles.
 
-在MongoDB部署时启用访问控制可以加强身份认证，要求用户表明自己的身份。当访问一个在部署时开启了访问控制的MongoDB时，用户只能执行由其角色决定的操作。
+在MongoDB部署时启用访问控制可以加强身份验证，要求用户表明自己的身份。当访问一个在部署时开启了访问控制的MongoDB时，用户只能执行由其角色决定的操作。
 
 The following tutorial enables access control on a standalone [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) instance and uses the [default authentication mechanism](https://docs.mongodb.com/manual/core/authentication-mechanisms/#authentication-mechanism-default). For all supported authentication mechanisms, see [Authentication Mechanisms](https://docs.mongodb.com/manual/core/authentication/#available-authentication-mechanisms).
 
@@ -38,7 +38,7 @@ With access control enabled, ensure you have a user with [`userAdmin`](https://d
 
 ## Procedure
 
-## 使用过程
+## 配置过程
 
 The following procedure first adds a user administrator to a MongoDB instance running without access control and then enables access control.
 
@@ -121,7 +121,7 @@ db.creatUser(
 
 ### 4 Re-start the MongoDB instance with access control.
 
-### 4 开启访问限制后重启MongoDB实例
+### 4 开启访问控制后重启MongoDB实例
 
 a. Shut down the [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) instance. For example, from the [`mongo`](https://docs.mongodb.com/manual/reference/program/mongo/#bin.mongo) shell, issue the following command:
 
@@ -174,7 +174,7 @@ Using the [`mongo`](https://docs.mongodb.com/v4.0/reference/program/mongo/#bin.m
 
 **Authenticate during Connection**
 
-**在连接期进行身份认证**
+**在连接时进行身份认证**
 
 Start a [`mongo`](https://docs.mongodb.com/v4.0/reference/program/mongo/#bin.mongo) shell with the :option:-u <username> <mongo -u>, -p, and the  --authenticationDatabase <database> command line options:
 
@@ -192,7 +192,7 @@ Enter your password when prompted. In this example, `abc123`.
 
 **Authenticate after Connection**
 
-**连接后进行身份认证**
+**在连接后进行身份认证**
 
 Connect the mongo shell to the mongod:
 
@@ -218,11 +218,11 @@ db.auth("myUserAdmin",  "abc123")
 
 ### 6 Create additional users as needed for your deployment.
 
-### 6 针对你部署的需要创建其他用户
+### 6 根据你的部署需要创建其他用户
 
 Once authenticated as the user administrator, use [`db.createUser()`](https://docs.mongodb.com/v4.0/reference/method/db.createUser/#db.createUser) to create additional users. You can assign any [built-in roles](https://docs.mongodb.com/v4.0/reference/built-in-roles/) or [user-defined roles](https://docs.mongodb.com/v4.0/core/security-user-defined-roles/) to the users.
 
-一旦身份认证为用户管理员，就能使用db.createUser()来创建其他用户。你可以将任务内置角色或用户自定义的角色分配给用户。
+一旦身份验证为用户管理员，就能使用db.createUser()来创建其他用户。你可以将任务内置角色或用户自定义的角色分配给用户。
 
 The following operation adds a user `myTester` to the `test` database who has [`readWrite`](https://docs.mongodb.com/v4.0/reference/built-in-roles/#readWrite) role in the `test` database as well as [`read`](https://docs.mongodb.com/v4.0/reference/built-in-roles/#read) role in the `reporting` database.
 
@@ -254,7 +254,7 @@ After creating the additional users, disconnect the [`mongo`](https://docs.mongo
 
 ### 7 Connect to the instance and authenticate as `myTester`.
 
-### 7 连接到实例并且使用myTester用户进行身份认证。
+### 7 连接到实例并且使用myTester用户进行身份验证。
 
 After disconnecting the [`mongo`](https://docs.mongodb.com/v4.0/reference/program/mongo/#bin.mongo) shell as `myUserAdmin`, reconnect as `myTester`. You can:
 
@@ -263,12 +263,12 @@ After disconnecting the [`mongo`](https://docs.mongodb.com/v4.0/reference/progra
 
 将用户myUserAdmin从mongo shell断开连接后，使用myTester用户重连时，你可以：
 
-- 连接时直接使用用户凭证来通过身份认证，或者
+- 连接时直接使用用户凭证来通过身份验证，或者
 - 连接时先不进行身份认证，连接后使用db.auth()方法进行身份认证
 
 **Authenticate during Connection**
 
-**在连接期进行身份认证**
+**在连接期进行身份验证**
 
 Start a [`mongo`](https://docs.mongodb.com/v4.0/reference/program/mongo/#bin.mongo) shell with the :option:-u <username> <mongo -u>, -p, and the  --authenticationDatabase <database> command line options:
 
@@ -286,7 +286,7 @@ Enter your password when prompted. In this example, `xyz123`.
 
 **Authenticate after Connection**
 
-**连接后进行身份认证**
+**连接后进行身份验证**
 
 Connect the mongo shell to the mongod:
 
@@ -338,7 +338,7 @@ Replica sets and sharded clusters require internal authentication between member
 
 ### Localhost Exception
 
-### 本地主机异常
+### 本地主机Localhost异常
 
 You can create users either before or after enabling access control. If you enable access control before creating any user, MongoDB provides a [localhost exception](https://docs.mongodb.com/v4.0/core/security-users/#localhost-exception) which allows you to create a user administrator in the `admin` database. Once created, you must authenticate as the user administrator to create additional users as needed.
 
