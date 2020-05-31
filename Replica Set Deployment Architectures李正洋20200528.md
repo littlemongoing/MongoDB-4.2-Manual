@@ -195,7 +195,7 @@ SEE ALSO
 
 ### Use Journaling to Protect Against Power Failures
 
-### 使用journaling来防止掉电
+### 使用journaling来防止停电
 
 MongoDB enables [journaling](https://docs.mongodb.com/manual/core/journaling/) by default. Journaling protects against data loss in the event of service interruptions, such as power failures and unexpected reboots.
 
