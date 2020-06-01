@@ -26,7 +26,7 @@ This documents provides a list of security measures that you should implement to
 
 **Pre-production Checklist/Considerations**
 
-**之前产品的检查列表/注意事项**
+**前期产品的检查列表/注意事项**
 
 ### ➤ Enable Access Control and Enforce Authentication
 
