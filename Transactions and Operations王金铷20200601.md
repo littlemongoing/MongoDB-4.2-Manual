@@ -24,7 +24,7 @@ On this page
 
   - [Informational Operations](https://docs.mongodb.com/manual/core/transactions-operations/#informational-operations)
 
-  - > 信息类操作
+  - > 信息操作
 
 - [Restricted Operations](https://docs.mongodb.com/manual/core/transactions-operations/#restricted-operations)
 
