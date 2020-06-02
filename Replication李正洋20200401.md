@@ -179,7 +179,7 @@ By default, clients read from the primary [[1\]](https://docs.mongodb.com/manual
 
 [Asynchronous replication](https://docs.mongodb.com/manual/replication/#asynchronous-replication) to secondaries means that reads from secondaries may return data that does not reflect the state of the data on the primary.
 
-[异步复制](https://docs.mongodb.com/manual/replication/#asynchronous-replication)至副本节点，意味着从副本节点读取返回的数据不能反映主节点上数据的状态。
+[异步复制](https://docs.mongodb.com/manual/replication/#asynchronous-replication)至从节点，意味着从节点读取返回的数据不能反映主节点上数据的状态。
 
 [Multi-document transactions](https://docs.mongodb.com/manual/core/transactions/) that contain read operations must use read preference [`primary`](https://docs.mongodb.com/manual/core/read-preference/#primary). All operations in a given transaction must route to the same member.
 
@@ -198,7 +198,7 @@ Depending on the read concern, clients can see the results of writes before the 
 - Regardless of a write’s [write concern](https://docs.mongodb.com/manual/reference/write-concern/), other clients using [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") or [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") read concern can see the result of a write operation before the write operation is acknowledged to the issuing client.
 - Clients using [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") or [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") read concern can read data which may be subsequently [rolled back](https://docs.mongodb.com/manual/core/replica-set-rollbacks/) during replica set failovers.
 
-根据读关注点，客户端可以在写[持久化](https://docs.mongodb.com/manual/reference/glossary/#term-durable)前看到写结果：
+根据读关注，客户端可以在写[持久化](https://docs.mongodb.com/manual/reference/glossary/#term-durable)前看到写结果：
 
 - 不管写的 [write concern](https://docs.mongodb.com/manual/reference/write-concern/)级别是什么，其他使用了读关注级别为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 或 [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") 的客户端，可以在发起写操作的客户端确认其写成功之前查看该客户端写的结果。
 - 使用了读关注级别为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 或 [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") 的客户端，能读取在副本集故障转移期间可能随后被[回滚](https://docs.mongodb.com/manual/core/replica-set-rollbacks/) 掉的数据。
@@ -213,7 +213,7 @@ Until a transaction commits, the data changes made in the transaction are not vi
 
 However, when a transaction writes to multiple shards, not all outside read operations need to wait for the result of the committed transaction to be visible across the shards. For example, if a transaction is committed and write 1 is visible on shard A but write 2 is not yet visible on shard B, an outside read at read concern [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") can read the results of write 1 without seeing write 2.
 
-然而，当一个事务写入多个分片时，并不是所有外部的读操作都需要等待提交的事务的结果在分片中可见。例如，如果提交了一个事务，并且在分片a上可以看到写1，但是在分片B上还不能看到写2，那么外部读关注点为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 的读可以在不看到写2的情况下读取写1的结果。
+然而，当一个事务写入多个分片时，并不是所有外部的读操作都需要等待提交的事务的结果在分片中可见。例如，如果提交了一个事务，并且在分片a上可以看到写1，但是在分片B上还不能看到写2，那么外部读关注为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 的读可以在不看到写2的情况下读取写1的结果。
 
 For more information on read isolations, consistency and recency for MongoDB, see [Read Isolation, Consistency, and Recency](https://docs.mongodb.com/manual/core/read-isolation-consistency-recency/).
 
