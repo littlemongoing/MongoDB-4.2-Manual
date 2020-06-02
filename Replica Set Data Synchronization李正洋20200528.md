@@ -9,7 +9,7 @@ On this page 本章
 
 In order to maintain up-to-date copies of the shared data set, secondary members of a replica set [sync](https://docs.mongodb.com/manual/reference/glossary/#term-sync) or replicate data from other members. MongoDB uses two forms of data synchronization: initial sync to populate new members with the full data set, and replication to apply ongoing changes to the entire data set.
 
-为了维护共享数据集的最新副本，副本集的副本成员可以从其他成员同步或复制数据。MongoDB使用两种形式的数据同步：初始化同步用完整的数据集来填充新成员；复制是将持续变化的更改应用到整个数据集上。
+为了维护共享数据集的最新副本，副本集中的从节点成员可以从其他成员同步或复制数据。MongoDB中有两种形式的数据同步：初始化同步将完整的数据集填充至新成员；而复制会持续将变更应用到整个数据集上。
 
 
 
@@ -43,11 +43,11 @@ When you perform an initial sync, MongoDB:
 
 To perform an initial sync, see [Resync a Member of a Replica Set](https://docs.mongodb.com/manual/tutorial/resync-replica-set-member/).
 
-当你执行一个初始化同步，MongoDB会：
+当执行一个初始化同步时，MongoDB会：
 
-1. 克隆除[local](https://docs.mongodb.com/manual/reference/local-database/#replica-set-local-database)数据库之外的所有数据库。为了进行克隆，[`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) 扫描每个源数据库中的每个集合，并将所有数据插入到这些集合的自身副本中。
+1. 克隆除[local](https://docs.mongodb.com/manual/reference/local-database/#replica-set-local-database)数据库之外的所有数据库。为了进行克隆，[`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) 扫描每个源数据库中的各个集合，并将所有数据插入到这些集合各自的副本中。
 
-   3.4版本的变化：初始化同步在为每个集合复制文档时会构建所有集合的索引。在MongoDB的早期版本中，在这个阶段只构建_id索引。
+   3.4版本的变化：初始化同步在为每个集合复制文档时会建立集合的所有索引。在MongoDB的早期版本中，在这个阶段只建立_id索引。
 
    3.4版本的变化：初始化同步会获取在数据复制期间新增的oplog记录。请确保目标成员的local 数据库中有足够的磁盘空间，以便可以在数据复制阶段期间内临时存储这些oplog记录。
 
@@ -114,7 +114,7 @@ The member applies the following criteria to each replica set member when making
 
 - 同步源必须处于 [`PRIMARY`](https://docs.mongodb.com/manual/reference/replica-states/#replstate.PRIMARY) 或者 [`SECONDARY`](https://docs.mongodb.com/manual/reference/replica-states/#replstate.SECONDARY) 的复制状态。
 - 同步源必须是在线且可访问的。
-- 如果参数 [`initialSyncSourceReadPreference`](https://docs.mongodb.com/manual/reference/parameters/#param.initialSyncSourceReadPreference) 设置为 [`secondary`](https://docs.mongodb.com/manual/core/read-preference/#secondary) 或者 [`secondaryPreferred`](https://docs.mongodb.com/manual/core/read-preference/#secondaryPreferred)，则同步源必须是一个副本节点。
+- 如果参数 [`initialSyncSourceReadPreference`](https://docs.mongodb.com/manual/reference/parameters/#param.initialSyncSourceReadPreference) 设置为 [`secondary`](https://docs.mongodb.com/manual/core/read-preference/#secondary) 或者 [`secondaryPreferred`](https://docs.mongodb.com/manual/core/read-preference/#secondaryPreferred)，则同步源必须是一个从节点。
 - 同步源必须和主节点最新的oplog条目同步时间相差在30s之内。
 - 如果该成员是可创建索引的，则同步源也必须可创建索引。
 - 如果该成员可参与副本集选举投票，则同步源也必须具有投票权。
@@ -142,13 +142,13 @@ The member applies the following criteria to each replica set member when making
 
 - 同步源必须处于 [`PRIMARY`](https://docs.mongodb.com/manual/reference/replica-states/#replstate.PRIMARY) 或者 [`SECONDARY`](https://docs.mongodb.com/manual/reference/replica-states/#replstate.SECONDARY) 的复制状态。
 - 同步源必须是在线且可访问的。
-- 如果参数 [`initialSyncSourceReadPreference`](https://docs.mongodb.com/manual/reference/parameters/#param.initialSyncSourceReadPreference) 设置为 [`secondary`](https://docs.mongodb.com/manual/core/read-preference/#secondary) ，则同步源必须是一个副本节点。
+- 如果参数 [`initialSyncSourceReadPreference`](https://docs.mongodb.com/manual/reference/parameters/#param.initialSyncSourceReadPreference) 设置为 [`secondary`](https://docs.mongodb.com/manual/core/read-preference/#secondary) ，则同步源必须是一个从节点。
 - 如果该成员是可创建索引的，则同步源也必须可创建索引。
 - 同步源必须比当前最好的同步源更快(即更低的时延)。
 
 If the member cannot select an initial sync source after two passes, it logs an error and waits `1` second before restarting the selection process. The secondary [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) can restart the initial sync source selection process up to `10` times before exiting with an error.
 
-如果该成员在两次遍历后依然无法选择出初始同步源，它会记录报错并在等待1s后重新发起选择的过程。副本节点的Mongod进程在出现报错退出之前，最多会重试10次初始同步源选择的过程。
+如果该成员在两次遍历后依然无法选择出初始同步源，它会记录报错并在等待1s后重新发起选择的过程。从节点的Mongod进程在出现报错退出之前，最多会重试10次初始同步源选择的过程。
 
 
 
@@ -160,11 +160,11 @@ If the member cannot select an initial sync source after two passes, it logs an 
 
 Secondary members replicate data continuously after the initial sync. Secondary members copy the [oplog](https://docs.mongodb.com/manual/core/replica-set-oplog/) from their *sync from* source and apply these operations in an asynchronous process. [[1\]](https://docs.mongodb.com/manual/core/replica-set-sync/#slow-oplogs)
 
-副本节点成员在初始化同步之后会不断地复制数据。副本节点成员从同步源复制[oplog](https://docs.mongodb.com/manual/core/replica-set-oplog/) ，并以异步的方式应用这些操作 [[1\]](https://docs.mongodb.com/manual/core/replica-set-sync/#slow-oplogs)。
+从节点成员在初始化同步之后会不断地复制数据。从节点成员从同步源复制[oplog](https://docs.mongodb.com/manual/core/replica-set-oplog/) ，并以异步的方式应用这些操作 [[1\]](https://docs.mongodb.com/manual/core/replica-set-sync/#slow-oplogs)。
 
 Secondaries may automatically change their *sync from* source as needed based on changes in the ping time and state of other members’ replication.
 
-副本节点可以根据ping时间和其他成员复制状态的变化，按需来自动调整它们的同步源。
+从节点可以根据ping时间和其他成员复制状态的变化，按需来自动调整它们的同步源。
 
 *Changed in version 3.2:* MongoDB 3.2 replica set members with [`1 vote`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].votes) cannot sync from members with [`0 votes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].votes).
 
@@ -172,17 +172,17 @@ Secondaries may automatically change their *sync from* source as needed based on
 
 Secondaries avoid syncing from [delayed members](https://docs.mongodb.com/manual/core/replica-set-delayed-member/#replica-set-delayed-members) and [hidden members](https://docs.mongodb.com/manual/core/replica-set-hidden-member/#replica-set-hidden-members).
 
-副本节点应避免从[延迟成员](https://docs.mongodb.com/manual/core/replica-set-delayed-member/#replica-set-delayed-members)和[隐藏成员](https://docs.mongodb.com/manual/core/replica-set-hidden-member/#replica-set-hidden-members)中同步数据。
+从节点应避免从[延迟成员](https://docs.mongodb.com/manual/core/replica-set-delayed-member/#replica-set-delayed-members)和[隐藏成员](https://docs.mongodb.com/manual/core/replica-set-hidden-member/#replica-set-hidden-members)中同步数据。
 
 If a secondary member has [`members[n].buildIndexes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes) set to `true`, it can only sync from other members where [`buildIndexes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes) is `true`. Members where [`buildIndexes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes) is `false` can sync from any other member, barring other sync restrictions. [`buildIndexes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes) is `true` by default.
 
-如果一个副本节点成员的参数[`members[n].buildIndexes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes) 设置为true，它只能从其他参数[buildIndexes](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes)设置为true的成员同步数据。参数[buildIndexes](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes)设置为false的成员可以从任何其他节点同步数据，除非有其它的同步限制。参数[buildIndexes](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes)默认为true。
+如果一个从节点成员的参数[`members[n].buildIndexes`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes) 设置为true，它只能从其他参数[buildIndexes](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes)设置为true的成员同步数据。参数[buildIndexes](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes)设置为false的成员可以从任何其他节点同步数据，除非有其他的同步限制。参数[buildIndexes](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.members[n].buildIndexes)默认为true。
 
 
 
 | [[1\]](https://docs.mongodb.com/manual/core/replica-set-sync/#id1) | Starting in version 4.2 (also available starting in 4.0.6), secondary members of a replica set now [log oplog entries](https://docs.mongodb.com/manual/release-notes/4.2/#slow-oplog) that take longer than the slow operation threshold to apply. These slow oplog messages are logged for the secondaries in the [`diagnostic log`](https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-logpath) under the [`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) component with the text `applied op: took ms`. These slow oplog entries depend only on the slow operation threshold. They do not depend on the log levels (either at the system or component level), or the profiling level, or the slow operation sample rate. The profiler does not capture slow oplog entries. |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [[1\]](https://docs.mongodb.com/manual/core/replica-set-sync/#id1) | 从4.2版本开始（从4.0.6开始也是可行的），副本集的副本成员会记录oplog中应用时间超过慢操作阈值的慢操作条目。这些慢oplog信息被记录在副本节点的诊断日志中，其路径位于REPL 组件的文本`applied op: took ms`中。这些慢日志条目仅仅依赖于慢操作阈值。它们不依赖于日志级别（无论是系统还是组件级别）、过滤级别，或者慢操作采样比例。过滤器不会捕获慢日志条目。 |
+| [[1\]](https://docs.mongodb.com/manual/core/replica-set-sync/#id1) | 从4.2版本开始（从4.0.6开始也是可行的），副本集的副本成员会记录oplog中应用时间超过慢操作阈值的慢操作条目。这些慢oplog信息被记录在从节点的诊断日志中，其路径位于REPL 组件的文本`applied op: took ms`中。这些慢日志条目仅仅依赖于慢操作阈值。它们不依赖于日志级别（无论是系统还是组件级别）、过滤级别，或者慢操作采样比例。过滤器不会捕获慢日志条目。 |
 
 
 
@@ -192,7 +192,7 @@ If a secondary member has [`members[n].buildIndexes`](https://docs.mongodb.com/m
 
 MongoDB applies write operations in batches using multiple threads to improve concurrency. MongoDB groups batches by document id ([WiredTiger](https://docs.mongodb.com/manual/core/wiredtiger/#storage-wiredtiger)) and simultaneously applies each group of operations using a different thread. MongoDB always applies write operations to a given document in their original write order.
 
-MongoDB通过使用多线程批量应用写操作来提高并发。MongoDB根据文档id (WiredTiger)进行分批，同时使用不同的线程应用每组操作。MongoDB总是按照原始的写顺序对给定的文档应用写操作。
+MongoDB通过使用多线程批量应用写操作来提高并发。MongoDB根据文档id （[WiredTiger](https://docs.mongodb.com/manual/core/wiredtiger/#storage-wiredtiger)）进行分批，同时使用不同的线程应用每组操作。MongoDB总是按照原始的写顺序对给定的文档应用写操作。
 
 *Changed in version 4.0.*
 
@@ -200,7 +200,7 @@ Starting in MongoDB 4.0, read operations that [target secondaries](https://docs.
 
 *4.0版本的变化。*
 
-从MongoDB 4.0开始，如果读取发生在正在应用批量复制的副本节点上，那么针对副本节点且读关注级别设置为“local”或“majority”的读取操作，现在将从WiredTiger数据快照中读取数据。从快照中读取数据可以保证数据的一致性视图，并且允许在进行复制的同时进行读取，而不需要使用锁。因此，需要这些读关注级别的副本节点读取操作不再需要等待应用完批量复制，并且可以在接收它们时进行处理。
+从MongoDB 4.0开始，如果读取发生在正在应用批量复制的从节点上，那么针对从节点且读关注级别设置为“local”或“majority”的读取操作，现在将从WiredTiger数据快照中读取数据。从快照中读取数据可以保证数据的一致性视图，并且允许在进行复制的同时进行读取，而不需要使用锁。因此，这些读关注级别的从节点读取操作不再需要等待批量复制应用完成，并且可以在接收它们的同时进行处理。
 
 ### Flow Control
 
@@ -222,7 +222,7 @@ For more information, see [Flow Control](https://docs.mongodb.com/manual/tutoria
 
 说明
 
-为了进行流控制，副本集/分片集群必须满足：参数[featureCompatibilityVersion (FCV)](https://docs.mongodb.com/manual/reference/command/setFeatureCompatibilityVersion/#view-fcv) 设置为4.2，并启用majority级别的读关注。也就是说，如果FCV不是4.2，或者读关心点majority被禁用，那么启用流控制将不起作用。
+为了进行流控制，副本集/分片集群必须满足：参数[featureCompatibilityVersion (FCV)](https://docs.mongodb.com/manual/reference/command/setFeatureCompatibilityVersion/#view-fcv) 设置为4.2，并启用majority级别的读关注。也就是说，如果FCV不是4.2，或者读关注majority被禁用，那么流控制的启用将不会生效。
 
 更多信息请参见[流控制](https://docs.mongodb.com/manual/tutorial/troubleshoot-replica-sets/#flow-control)。
 
