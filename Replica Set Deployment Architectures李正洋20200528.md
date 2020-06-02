@@ -14,7 +14,7 @@ The architecture of a [replica set](https://docs.mongodb.com/manual/reference/gl
 
 The standard replica set deployment for production system is a three-member replica set. These sets provide redundancy and fault tolerance. Avoid complexity when possible, but let your application requirements dictate the architecture.
 
-生产系统的标准副本集部署是一个三成员的副本集。这些副本集提供冗余和容错能力。应尽可能避免复杂性，但是要让您的应用程序需求来决定架构体系。
+生产系统的标准副本集部署是一个三成员的副本集。这些副本集提供了冗余和容错能力。应尽可能避免复杂性，但是要让您的应用程序需求来决定架构体系。
 
 ## Strategies
 
@@ -34,7 +34,7 @@ Add members in a replica set according to these strategies.
 
 A replica set can have up to `50 members`, but only `7 voting members`. If the replica set already has 7 voting members, additional members must be [non-voting members](https://docs.mongodb.com/manual/core/replica-set-elections/#replica-set-non-voting-members).
 
-一个副本集至多可以有50个成员，但可投票成员最多只能有7个。如果副本集已经有7个有投票权的成员了，那其他的成员只能是无投票权成员。
+一个副本集至多可以有50个成员，但可投票成员最多只能有7个。如果副本集已经有7个有投票权的成员了，那其他的成员只能作为无投票权成员。
 
 #### Deploy an Odd Number of Members
 
@@ -80,7 +80,7 @@ In general, avoid deploying more than one arbiter per replica set.
 
 *Fault tolerance* for a replica set is the number of members that can become unavailable and still leave enough members in the set to elect a primary. In other words, it is the difference between the number of members in the set and the [`majority`](https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#replSetGetStatus.majorityVoteCount) of voting members needed to elect a primary. Without a primary, a replica set cannot accept write operations. Fault tolerance is an effect of replica set size, but the relationship is not direct. See the following table:
 
-副本集的容错性是指能变成不可用但之后仍能保留有足够数量的成员来完成主节点选举的成员个数。换句话说，它是副本集的成员个数与完成主节点选举所需要的大多数投票成员个数之间的差值。如果没有主节点，副本集就不能接受写操作。容错性受到副本集大小的影响，但两者之间的关系并不直接。见下表:
+副本集的容错性是指在有些节点变为不可用之后仍能保留足够数量的成员来完成主节点选举的成员个数。换句话说，它是副本集的成员个数与完成主节点选举所需要的大多数投票成员个数之间的差值。如果没有主节点，副本集就不能接受写操作。容错性受到副本集大小的影响，但两者之间的关系并不直接。见下表:
 
 | Number of Members | Majority Required to Elect a New Primary | Fault Tolerance |
 | :---------------- | :--------------------------------------- | :-------------- |
@@ -103,7 +103,7 @@ Starting in version 4.2.1, [`rs.status()`](https://docs.mongodb.com/manual/refer
 
 Add [hidden](https://docs.mongodb.com/manual/core/replica-set-hidden-member/#replica-set-hidden-members) or [delayed](https://docs.mongodb.com/manual/core/replica-set-delayed-member/#replica-set-delayed-members) members to support dedicated functions, such as backup or reporting.
 
-添加隐藏或延迟成员来支持特殊的用途，比如备份或者报告。
+添加隐藏或延迟成员来支持特殊的用途，比如备份或者生成报告。
 
 #### Load Balance on Read-Heavy Deployments
 
@@ -129,7 +129,7 @@ Distributing replica set members across two data centers provides benefit over a
 
 If possible, distribute members across at least three data centers. For config server replica sets (CSRS), the best practice is to distribute across three (or more depending on the number of members) centers. If the cost of the third data center is prohibitive, one distribution possibility is to evenly distribute the data bearing members across the two data centers and store the remaining member in the cloud if your company policy allows.
 
-如果可能，将成员分布到至少三个数据中心中。对于配置服务器副本集(CSRS)，最佳实践是在三个(或更多，取决于成员数量)数据中心之间分布成员。如果第三个数据中心的成本过高，一种分布的可能性是将数据成员均匀地分布到两个数据中心，并在公司政策允许的情况下将剩余的成员部署在云上。
+如果可能，将成员分布到至少三个数据中心中。对于配置服务器副本集(CSRS)，最佳实践是在三个(或更多，取决于成员数量)数据中心之间分布成员。如果第三个数据中心的成本过高，一种可能的分布是将数据成员均匀地分布到两个数据中心，并在公司政策允许的情况下将剩余的成员部署在云上。
 
 Always ensure that the main facility is able to elect a primary.
 
