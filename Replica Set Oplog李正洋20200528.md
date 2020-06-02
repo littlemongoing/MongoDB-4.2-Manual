@@ -12,13 +12,13 @@ On this page
 
 The [oplog](https://docs.mongodb.com/manual/reference/glossary/#term-oplog) (operations log) is a special [capped collection](https://docs.mongodb.com/manual/reference/glossary/#term-capped-collection) that keeps a rolling record of all operations that modify the data stored in your databases.
 
-oplog(操作日志)是一个特殊的[有限集合](https://docs.mongodb.com/manual/reference/glossary/#term-capped-collection)，它对所有修改存储在数据库中的数据的操作进行滚动记录。
+oplog(操作日志)是一个特殊的[有限集合](https://docs.mongodb.com/manual/reference/glossary/#term-capped-collection)，它对数据库中所存储数据的所有修改操作进行滚动记录。
 
 NOTE说明
 
 Starting in MongoDB 4.0, unlike other capped collections, the oplog can grow past its configured size limit to avoid deleting the [`majority commit point`](https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#replSetGetStatus.optimes.lastCommittedOpTime).
 
-从MongoDB 4.0开始，与其他有限集合不同，oplog集合可以超过其配置的大小限制，以避免删除[大多数提交点](https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#replSetGetStatus.optimes.lastCommittedOpTime)。
+从MongoDB 4.0开始，与其他有限集合不同，oplog集合可以超过其配置的大小限制，以避免[大多数提交点](https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#replSetGetStatus.optimes.lastCommittedOpTime)被删除。
 
 MongoDB applies database operations on the [primary](https://docs.mongodb.com/manual/reference/glossary/#term-primary) and then records the operations on the primary’s oplog. The [secondary](https://docs.mongodb.com/manual/reference/glossary/#term-secondary) members then copy and apply these operations in an asynchronous process. All replica set members contain a copy of the oplog, in the [`local.oplog.rs`](https://docs.mongodb.com/manual/reference/local-database/#local.oplog.rs) collection, which allows them to maintain the current state of the database.
 
@@ -82,7 +82,7 @@ When you start a replica set member for the first time, MongoDB creates an oplog
 
 In most cases, the default oplog size is sufficient. For example, if an oplog is 5% of free disk space and fills up in 24 hours of operations, then secondaries can stop copying entries from the oplog for up to 24 hours without becoming too stale to continue replicating. However, most replica sets have much lower operation volumes, and their oplogs can hold much higher numbers of operations.
 
-在大多数情况下，默认的oplog大小就足够了。例如，如果一个oplog是空闲磁盘空间的5%，并且可容纳24小时的操作记录，那么副本节点从oplog停止复制条目的时间可以长达24小时，并且不会因oplog条目变得太陈旧而无法继续复制。但是，大多数副本集的操作容量要小得多，它们的oplog可以容纳更多的操作。
+在大多数情况下，默认的oplog大小就足够了。例如，如果一个oplog是空闲磁盘空间的5%，并且可容纳24小时的操作记录，那么从节点从oplog停止复制条目的时间可以长达24小时，并且不会因oplog条目变得太陈旧而无法继续复制。但是，大多数副本集的操作容量要小得多，它们的oplog可以容纳更多的操作。
 
 Before [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) creates an oplog, you can specify its size with the [`oplogSizeMB`](https://docs.mongodb.com/manual/reference/configuration-options/#replication.oplogSizeMB) option. Once you have started a replica set member for the first time, use the [`replSetResizeOplog`](https://docs.mongodb.com/manual/reference/command/replSetResizeOplog/#dbcmd.replSetResizeOplog) administrative command to change the oplog size. [`replSetResizeOplog`](https://docs.mongodb.com/manual/reference/command/replSetResizeOplog/#dbcmd.replSetResizeOplog) enables you to resize the oplog dynamically without restarting the [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) process.
 
@@ -142,7 +142,7 @@ To view oplog status, including the size and the time range of operations, issue
 
 Under various exceptional situations, updates to a [secondary’s](https://docs.mongodb.com/manual/reference/glossary/#term-secondary) oplog might lag behind the desired performance time. Use [`db.getReplicationInfo()`](https://docs.mongodb.com/manual/reference/method/db.getReplicationInfo/#db.getReplicationInfo) from a secondary member and the [replication status](https://docs.mongodb.com/manual/reference/method/db.getReplicationInfo/) output to assess the current state of replication and determine if there is any unintended replication delay.
 
-在各种异常情况下，对副本节点oplog的更新可能会滞后于预期的性能时间。在副本节点上使用 [`db.getReplicationInfo()`](https://docs.mongodb.com/manual/reference/method/db.getReplicationInfo/#db.getReplicationInfo)命令，以及根据复制状态输出结果来评估复制的当前状态，并确定是否存在任何意外的复制延迟。
+在各种异常情况下，对从节点oplog的更新可能会滞后于预期的性能时间。在从节点上使用 [`db.getReplicationInfo()`](https://docs.mongodb.com/manual/reference/method/db.getReplicationInfo/#db.getReplicationInfo)命令，以及根据复制状态输出结果来评估复制的当前状态，并确定是否存在任何意外的复制延迟。
 
 Starting in MongoDB 4.2, administrators can limit the rate at which the primary applies its writes with the goal of keeping the [`majority committed`](https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#replSetGetStatus.optimes.lastCommittedOpTime) lag under a configurable maximum value [`flowControlTargetLagSeconds`](https://docs.mongodb.com/manual/reference/parameters/#param.flowControlTargetLagSeconds).
 
@@ -160,7 +160,7 @@ See [Replication Lag](https://docs.mongodb.com/manual/tutorial/troubleshoot-repl
 
 说明
 
-为了进行流控制，副本集/分片集群必须满足：参数[featureCompatibilityVersion (FCV)](https://docs.mongodb.com/manual/reference/command/setFeatureCompatibilityVersion/#view-fcv) 设置为4.2，并启用majority读关心点。也就是说，如果FCV不是4.2，或者读关心点majority被禁用，那么启用流控制将不起作用。
+为了进行流控制，副本集/分片集群必须满足：参数[featureCompatibilityVersion (FCV)](https://docs.mongodb.com/manual/reference/command/setFeatureCompatibilityVersion/#view-fcv) 设置为4.2，并启用majority读关注。也就是说，如果FCV不是4.2，或者读关注majority被禁用，那么启用流控制将不起作用。
 
 更多信息请参见[流控制](https://docs.mongodb.com/manual/tutorial/troubleshoot-replica-sets/#flow-control)。
 
@@ -170,7 +170,7 @@ See [Replication Lag](https://docs.mongodb.com/manual/tutorial/troubleshoot-repl
 
 Starting in version 4.2 (also available starting in version 4.0.6), secondary members of a replica set now log oplog entries that take longer than the slow operation threshold to apply. These messages are [`logged`](https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-logpath) for the secondaries under the [`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) component with the text `applied op: took ms`.
 
-从4.2版本开始（从4.0.6开始也是可行的），副本集的副本成员会记录oplog中应用时间超过慢操作阈值的慢操作条目。这些慢oplog信息被记录在副本节点[`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) 组件的文本`applied op: took ms`中。
+从4.2版本开始（从4.0.6开始也是可行的），副本集的副本成员会记录oplog中应用时间超过慢操作阈值的慢操作条目。这些慢oplog信息被记录在从节点[`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) 组件的文本`applied op: took ms`中。
 
 ```
 2018-11-16T12:31:35.886-0500 I REPL   [repl writer worker 13] applied op: command { ... }, took 112ms
@@ -182,10 +182,10 @@ The slow oplog application logging on secondaries are:
 - Not affected by the [`logLevel`](https://docs.mongodb.com/manual/reference/parameters/#param.logLevel)/[`systemLog.verbosity`](https://docs.mongodb.com/manual/reference/configuration-options/#systemLog.verbosity) level (or the [`systemLog.component.replication.verbosity`](https://docs.mongodb.com/manual/reference/configuration-options/#systemLog.component.replication.verbosity) level); i.e. for oplog entries, the secondary logs only the slow oplog entries. Increasing the verbosity level does not log all oplog entries.
 - Not captured by the [profiler](https://docs.mongodb.com/manual/tutorial/manage-the-database-profiler/) and not affected by the profiling level.
 
-记录在副本节点上的慢操作应用程序有：
+记录在从节点上的慢操作应用程序有：
 
-- 不受 [`slowOpSampleRate`](https://docs.mongodb.com/manual/reference/configuration-options/#operationProfiling.slowOpSampleRate)的影响；例如，所有的慢oplog条目被记录在副本节点上。
-- 不受 [`logLevel`](https://docs.mongodb.com/manual/reference/parameters/#param.logLevel)/[`systemLog.verbosity`](https://docs.mongodb.com/manual/reference/configuration-options/#systemLog.verbosity) 级别的影响（或者[`systemLog.component.replication.verbosity`](https://docs.mongodb.com/manual/reference/configuration-options/#systemLog.component.replication.verbosity) 的级别）；例如，对于oplog条目，副本节点仅记录慢oplog条目。增加日志的冗余级别不会导致记录所有的oplog条目。
+- 不受 [`slowOpSampleRate`](https://docs.mongodb.com/manual/reference/configuration-options/#operationProfiling.slowOpSampleRate)的影响；例如，所有的慢oplog条目被记录在从节点上。
+- 不受 [`logLevel`](https://docs.mongodb.com/manual/reference/parameters/#param.logLevel)/[`systemLog.verbosity`](https://docs.mongodb.com/manual/reference/configuration-options/#systemLog.verbosity) 级别的影响（或者[`systemLog.component.replication.verbosity`](https://docs.mongodb.com/manual/reference/configuration-options/#systemLog.component.replication.verbosity) 的级别）；例如，对于oplog条目，从节点仅记录慢oplog条目。增加日志的冗余级别不会导致记录所有的oplog条目。
 - 不会被捕获器抓取到，并且不受捕获级别的影响。
 
 For more information on setting the slow operation threshold, see
