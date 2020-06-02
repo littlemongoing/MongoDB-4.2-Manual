@@ -35,7 +35,7 @@ In some cases, replication can provide increased read capacity as clients can se
 
 A replica set is a group of [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) instances that maintain the same data set. A replica set contains several data bearing nodes and optionally one arbiter node. Of the data bearing nodes, one and only one member is deemed the primary node, while the other nodes are deemed secondary nodes.
 
-副本集是一组维护相同数据集合的 [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod)实例。副本集包含多个数据承载节点和一个可选的仲裁节点。在数据承载节点中，有且仅有一个成员为主节点，其他节点为副本节点。
+副本集是一组维护相同数据集合的 [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod)实例。副本集包含多个数据承载节点和一个可选的仲裁节点。在数据承载节点中，有且仅有一个成员为主节点，其他节点为从节点。
 
 The [primary node](https://docs.mongodb.com/manual/core/replica-set-primary/) receives all write operations. A replica set can have only one primary capable of confirming writes with [`{ w: "majority" }`](https://docs.mongodb.com/manual/reference/write-concern/#writeconcern."majority") write concern; although in some circumstances, another mongod instance may transiently believe itself to also be primary. [[1\]](https://docs.mongodb.com/manual/replication/#edge-cases-2-primaries) The primary records all changes to its data sets in its operation log, i.e. [oplog](https://docs.mongodb.com/manual/core/replica-set-oplog/). For more information on primary node operation, see [Replica Set Primary](https://docs.mongodb.com/manual/core/replica-set-primary/).
 
@@ -45,19 +45,19 @@ The [primary node](https://docs.mongodb.com/manual/core/replica-set-primary/) re
 
 The [secondaries](https://docs.mongodb.com/manual/core/replica-set-secondary/) replicate the primary’s oplog and apply the operations to their data sets such that the secondaries’ data sets reflect the primary’s data set. If the primary is unavailable, an eligible secondary will hold an election to elect itself the new primary. For more information on secondary members, see [Replica Set Secondary Members](https://docs.mongodb.com/manual/core/replica-set-secondary/).
 
-副本节点复制主节点的oplog，并将这些操作应用于它们的数据集，这样以便副本节点的数据集能反映出主节点的数据集。如果主节点不可用，一个候选的副本节点将会发起选举并使之成为新的主节点。有关副本成员的更多信息，请参见[副本集副本成员](https://docs.mongodb.com/manual/core/replica-set-secondary/)。
+从节点复制主节点的oplog，并将这些操作应用于它们的数据集，这样以便从节点的数据集能反映出主节点的数据集。如果主节点不可用，一个候选的从节点将会发起选举并使之成为新的主节点。有关副本成员的更多信息，请参见[副本成员](https://docs.mongodb.com/manual/core/replica-set-secondary/)。
 
 ![Diagram of a 3 member replica set that consists of a primary and two secondaries.](https://docs.mongodb.com/manual/_images/replica-set-primary-with-two-secondaries.bakedsvg.svg)
 
 In some circumstances (such as you have a primary and a secondary but cost constraints prohibit adding another secondary), you may choose to add a [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) instance to a replica set as an [arbiter](https://docs.mongodb.com/manual/core/replica-set-arbiter/). An arbiter participates in [elections](https://docs.mongodb.com/manual/core/replica-set-elections/#replica-set-elections) but does not hold data (i.e. does not provide data redundancy). For more information on arbiters, see [Replica Set Arbiter](https://docs.mongodb.com/manual/core/replica-set-arbiter/).
 
-在某些情况下(比如您有一个主节点和一个副本节点，但由于成本约束无法添加另一个副本节点)，您可以选择将一个 [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) 实例作为 [仲裁节点](https://docs.mongodb.com/manual/core/replica-set-arbiter/)添加到一个副本集中。仲裁节点参与[选举](https://docs.mongodb.com/manual/core/replica-set-elections/#replica-set-elections)但不持有数据(即不提供数据冗余)。有关仲裁节点的更多信息，请参见[副本集仲裁节点](https://docs.mongodb.com/manual/core/replica-set-arbiter/)。
+在某些情况下(比如您有一个主节点和一个从节点，但由于成本约束无法添加另一个从节点)，您可以选择将一个 [`mongod`](https://docs.mongodb.com/manual/reference/program/mongod/#bin.mongod) 实例作为 [仲裁节点](https://docs.mongodb.com/manual/core/replica-set-arbiter/)添加到一个副本集中。仲裁节点参与[选举](https://docs.mongodb.com/manual/core/replica-set-elections/#replica-set-elections)但不持有数据(即不提供数据冗余)。有关仲裁节点的更多信息，请参见[副本集仲裁节点](https://docs.mongodb.com/manual/core/replica-set-arbiter/)。
 
 ![Diagram of a replica set that consists of a primary, a secondary, and an arbiter.](https://docs.mongodb.com/manual/_images/replica-set-primary-with-secondary-and-arbiter.bakedsvg.svg)
 
 An [arbiter](https://docs.mongodb.com/manual/core/replica-set-arbiter/) will always be an arbiter whereas a [primary](https://docs.mongodb.com/manual/core/replica-set-primary/) may step down and become a [secondary](https://docs.mongodb.com/manual/core/replica-set-secondary/) and a [secondary](https://docs.mongodb.com/manual/core/replica-set-secondary/) may become the primary during an election.
 
-[仲裁节点](https://docs.mongodb.com/manual/core/replica-set-arbiter/) 永远只能是仲裁节点，但在选举过程中[主节点](https://docs.mongodb.com/manual/core/replica-set-primary/)也许会降级成为 [副本节点](https://docs.mongodb.com/manual/core/replica-set-secondary/)， [副本节点](https://docs.mongodb.com/manual/core/replica-set-secondary/)也可能会升级成为主节点。
+[仲裁节点](https://docs.mongodb.com/manual/core/replica-set-arbiter/) 永远只能是仲裁节点，但在选举过程中[主节点](https://docs.mongodb.com/manual/core/replica-set-primary/)也许会降级成为 [从节点](https://docs.mongodb.com/manual/core/replica-set-secondary/)， [从节点](https://docs.mongodb.com/manual/core/replica-set-secondary/)也可能会升级成为主节点。
 
 
 
@@ -67,7 +67,7 @@ An [arbiter](https://docs.mongodb.com/manual/core/replica-set-arbiter/) will alw
 
 Secondaries replicate the primary’s oplog and apply the operations to their data sets asynchronously. By having the secondaries’ data sets reflect the primary’s data set, the replica set can continue to function despite the failure of one or more members.
 
-副本节点复制主节点的oplog并异步地应用操作到它们的数据集。通过让副本节点的数据集反映主服务器的数据集，副本集可以在一个或多个成员失败的情况下继续运行。
+从节点复制主节点的oplog并异步地应用操作到它们的数据集。通过让从节点的数据集反映主服务器的数据集，副本集可以在一个或多个成员失败的情况下继续运行。
 
 For more information on replication mechanics, see [Replica Set Oplog](https://docs.mongodb.com/manual/core/replica-set-oplog/#replica-set-oplog) and [Replica Set Data Synchronization](https://docs.mongodb.com/manual/core/replica-set-sync/#replica-set-sync).
 
@@ -79,7 +79,7 @@ For more information on replication mechanics, see [Replica Set Oplog](https://d
 
 Starting in version 4.2 (also available starting in 4.0.6), secondary members of a replica set now [log oplog entries](https://docs.mongodb.com/manual/release-notes/4.2/#slow-oplog) that take longer than the slow operation threshold to apply. These slow oplog messages are logged for the secondaries in the [`diagnostic log`](https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-logpath) under the [`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) component with the text `applied op: took ms`. These slow oplog entries depend only on the slow operation threshold. They do not depend on the log levels (either at the system or component level), or the profiling level, or the slow operation sample rate. The profiler does not capture slow oplog entries.
 
-从4.2版本开始（从4.0.6开始也是可行的），副本集的副本成员会记录oplog中应用时间超过慢操作阈值的慢操作条目。这些慢oplog信息被记录在副本节点的[诊断日志](https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-logpath) 中，其路径位于[`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) 组件的文本`applied op: took ms`中。这些慢日志条目仅仅依赖于慢操作阈值。它们不依赖于日志级别（无论是系统还是组件级别）、过滤级别，或者慢操作采样比例。过滤器不会捕获慢日志条目。
+从4.2版本开始（从4.0.6开始也是可行的），副本集的副本成员会记录oplog中应用时间超过慢操作阈值的慢操作条目。这些慢oplog信息被记录在从节点的[诊断日志](https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-logpath) 中，其路径位于[`REPL`](https://docs.mongodb.com/manual/reference/log-messages/#REPL) 组件的文本`applied op: took ms`中。这些慢日志条目仅仅依赖于慢操作阈值。它们不依赖于日志级别（无论是系统还是组件级别）、过滤级别，或者慢操作采样比例。过滤器不会捕获慢日志条目。
 
 
 
@@ -89,7 +89,7 @@ Starting in version 4.2 (also available starting in 4.0.6), secondary members of
 
 [Replication lag](https://docs.mongodb.com/manual/reference/glossary/#term-replication-lag) refers to the amount of time that it takes to copy (i.e. replicate) a write operation on the [primary](https://docs.mongodb.com/manual/reference/glossary/#term-primary) to a [secondary](https://docs.mongodb.com/manual/reference/glossary/#term-secondary). Some small delay period may be acceptable, but significant problems emerge as replication lag grows, including building cache pressure on the primary.
 
-[复制延迟](https://docs.mongodb.com/manual/reference/glossary/#term-replication-lag) 指的是将[主节点](https://docs.mongodb.com/manual/core/replica-set-primary/)的写操作拷贝(即复制)到 [副本节点](https://docs.mongodb.com/manual/core/replica-set-secondary/)所花费的时间。一些小的延迟期可能是可以接受的，但是随着复制延迟的增长，会出现严重的问题，包括引起主节点的缓存压力。
+[复制延迟](https://docs.mongodb.com/manual/reference/glossary/#term-replication-lag) 指的是将[主节点](https://docs.mongodb.com/manual/core/replica-set-primary/)的写操作拷贝(即复制)到 [从节点](https://docs.mongodb.com/manual/core/replica-set-secondary/)所花费的时间。一些小的延迟期可能是可以接受的，但是随着复制延迟的增长，会出现严重的问题，包括引起主节点的缓存压力。
 
 Starting in MongoDB 4.2, administrators can limit the rate at which the primary applies its writes with the goal of keeping the [`majority committed`](https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#replSetGetStatus.optimes.lastCommittedOpTime) lag under a configurable maximum value [`flowControlTargetLagSeconds`](https://docs.mongodb.com/manual/reference/parameters/#param.flowControlTargetLagSeconds).
 
@@ -125,13 +125,13 @@ For more information, see [Check the Replication Lag](https://docs.mongodb.com/m
 
 When a primary does not communicate with the other members of the set for more than the configured `electionTimeoutMillis` period (10 seconds by default), an eligible secondary calls for an election to nominate itself as the new primary. The cluster attempts to complete the election of a new primary and resume normal operations.
 
-当主节点无法和集群中其他节点通信的时间超过参数`electionTimeoutMillis`配置的期限时（默认10s），一个候选的副本节点会发起选举来推荐自己成为新主节点。集群会尝试完成一次新主节点的选举并恢复正常的操作。
+当主节点无法和集群中其他节点通信的时间超过参数`electionTimeoutMillis`配置的期限时（默认10s），一个候选的从节点会发起选举来推荐自己成为新主节点。集群会尝试完成一次新主节点的选举并恢复正常的操作。
 
 ![Diagram of an election of a new primary. In a three member replica set with two secondaries, the primary becomes unreachable. The loss of a primary triggers an election where one of the secondaries becomes the new primary](https://docs.mongodb.com/manual/_images/replica-set-trigger-election.bakedsvg.svg)
 
 The replica set cannot process write operations until the election completes successfully. The replica set can continue to serve read queries if such queries are configured to [run on secondaries](https://docs.mongodb.com/manual/core/read-preference/#replica-set-read-preference) while the primary is offline.
 
-副本集在选举成功前是无法处理写操作的。如果读请求被配置运行在[副本节点](https://docs.mongodb.com/manual/core/read-preference/#replica-set-read-preference) 上，则当主节点下线时，副本集可以继续处理这些请求。
+副本集在选举成功前是无法处理写操作的。如果读请求被配置运行在[从节点](https://docs.mongodb.com/manual/core/read-preference/#replica-set-read-preference) 上，则当主节点下线时，副本集可以继续处理这些请求。
 
 The median time before a cluster elects a new primary should not typically exceed 12 seconds, assuming default [`replica configuration settings`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.settings). This includes time required to mark the primary as [unavailable](https://docs.mongodb.com/manual/replication/#replication-auto-failover) and call and complete an [election](https://docs.mongodb.com/manual/core/replica-set-elections/#replica-set-elections). You can tune this time period by modifying the [`settings.electionTimeoutMillis`](https://docs.mongodb.com/manual/reference/replica-configuration/#rsconf.settings.electionTimeoutMillis) replication configuration option. Factors such as network latency may extend the time required for replica set elections to complete, which in turn affects the amount of time your cluster may operate without a primary. These factors are dependent on your particular cluster architecture.
 
@@ -173,7 +173,7 @@ To learn more about MongoDB’s failover process, see:
 
 By default, clients read from the primary [[1\]](https://docs.mongodb.com/manual/replication/#edge-cases-2-primaries); however, clients can specify a [read preference](https://docs.mongodb.com/manual/core/read-preference/) to send read operations to secondaries.
 
-默认情况下，客户端从主节点读取[[1\]](https://docs.mongodb.com/manual/replication/#edge-cases-2-primaries)；然而，客户端可以定义一个[读偏好](https://docs.mongodb.com/manual/core/read-preference/) 将读操作发送给副本节点。
+默认情况下，客户端从主节点读取[[1\]](https://docs.mongodb.com/manual/replication/#edge-cases-2-primaries)；然而，客户端可以定义一个[读偏好](https://docs.mongodb.com/manual/core/read-preference/) 将读操作发送给从节点。
 
 ![Diagram of an application that uses read preference secondary.](https://docs.mongodb.com/manual/_images/replica-set-read-preference-secondary.bakedsvg.svg)
 
@@ -200,8 +200,8 @@ Depending on the read concern, clients can see the results of writes before the 
 
 根据读关注点，客户端可以在写[持久化](https://docs.mongodb.com/manual/reference/glossary/#term-durable)前看到写结果：
 
-- 不管写的 [write concern](https://docs.mongodb.com/manual/reference/write-concern/)级别是什么，其他使用了读关注点级别为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 或 [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") 的客户端，可以在发起写操作的客户端确认其写成功之前查看该客户端写的结果。
-- 使用了读关注点级别为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 或 [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") 的客户端，能读取在副本集故障转移期间可能随后被[回滚](https://docs.mongodb.com/manual/core/replica-set-rollbacks/) 掉的数据。
+- 不管写的 [write concern](https://docs.mongodb.com/manual/reference/write-concern/)级别是什么，其他使用了读关注级别为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 或 [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") 的客户端，可以在发起写操作的客户端确认其写成功之前查看该客户端写的结果。
+- 使用了读关注级别为 [`"local"`](https://docs.mongodb.com/manual/reference/read-concern-local/#readconcern."local") 或 [`"available"`](https://docs.mongodb.com/manual/reference/read-concern-available/#readconcern."available") 的客户端，能读取在副本集故障转移期间可能随后被[回滚](https://docs.mongodb.com/manual/core/replica-set-rollbacks/) 掉的数据。
 
 For operations in a [multi-document transaction](https://docs.mongodb.com/manual/core/transactions/), when a transaction commits, all data changes made in the transaction are saved and visible outside the transaction. That is, a transaction will not commit some of its changes while rolling back others.
 
