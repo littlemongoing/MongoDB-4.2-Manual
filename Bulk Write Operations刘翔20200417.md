@@ -138,7 +138,7 @@ To improve write performance to sharded clusters, use [`bulkWrite()`](https://do
 
 ### Avoid Monotonic Throttling 避免单调插入带来的瓶颈
 
-If your shard key increases monotonically during an insert, then all inserted data goes to the last chunk in the collection, which will always end up on a single shard. Therefore, the insert capacity of the cluster will never exceed the insert capacity of that single shard.<br>如果您的分片键再插入过程中时单调增加的，那么所有插入的数据都会插入到该分片集合的最后一个数据块中，也就是说会落到某单个分片上。因此，集群的插入能力将永远不会超过该单个跟片的插入性能（木桶的短板原理）。
+If your shard key increases monotonically during an insert, then all inserted data goes to the last chunk in the collection, which will always end up on a single shard. Therefore, the insert capacity of the cluster will never exceed the insert capacity of that single shard.<br>如果您的分片键在插入过程中是单调增加的，那么所有插入的数据都会插入到该分片集合的最后一个数据块中，也就是说会落到某单个分片上。因此，集群的插入能力将永远不会超过该单个分片的插入性能（木桶的短板原理）。
 
 If your insert volume is larger than what a single shard can process, and if you cannot avoid a monotonically increasing shard key, then consider the following modifications to your application:<br>如果插入量大于单个分片可以处理的数据量，并且无法避免单调增加的分片键，那么可以考虑对应用程序进行如下修改：
 
